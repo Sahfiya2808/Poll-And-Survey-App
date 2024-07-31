@@ -1,0 +1,120 @@
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.landcontainer {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  background:orange; /* Common background color for the remaining space */
+}
+
+.landgrid {
+  display: flex;
+  width: 80%;
+  height: 80%;
+  position: relative;
+  
+}
+
+.landbox {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Align content to the top */
+  align-items: center;
+  color: white;
+  padding: 20px;
+  border: 2px solid #333; /* Border for each grid item */
+  border-radius: 10px;
+  margin: 10px; /* Adjust margin for better spacing */
+  flex: 1;
+  position: relative;
+  background-clip: padding-box;
+  overflow: hidden; /* Ensure the blur effect doesn't extend beyond the element */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Optional shadow for added depth */
+}
+
+.landleft-side, .landright-side {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start; /* Align content to the top */
+  align-items: flex-start; /* Align content to the top */
+  padding-top: 20px; /* Add padding to the top */
+  color: black; /* Ensure the text color remains unaffected */
+  z-index: 1;
+}
+
+.landleft-side::before, .landright-side::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover; /* Make the image fill the grid */
+  background-position: center; /* Center the background image */
+  filter: blur(0px); /* Add blur effect */
+  z-index: -1; /* Place the blurred image behind the content */
+}
+
+.landleft-side::before {
+  background-image: url('https://t3.ftcdn.net/jpg/03/34/91/22/360_F_334912250_emagxACHE4M86YREjsFoFZPHWG7wOQOs.jpg');
+}
+
+.landright-side::before {
+  background-image: url('https://img.freepik.com/premium-vector/flat-design-telescope-work-flat-illustration_540641-432.jpg');
+}
+
+.landh1 {
+  font-size: 3em;
+  margin-bottom: 20px;
+  color: #000; /* Change text color to black */
+}
+
+.landnickname-input {
+  width: 50%; /* Smaller text box size */
+  padding: 5px 10px; /* Adjusted padding */
+  border-radius: 5px;
+  border: 1px solid #ccc; /* Added border for better visibility */
+  margin-bottom: 20px;
+}
+
+.get-landbutton {
+  font-size: 2.0em;
+  padding: 10px 20px;
+  border: none; /* Removed border */
+  background: rgba(61, 101, 221, 0.8);
+  color: black;
+  cursor: pointer;
+  border-radius: 5px;
+  align-content: left;
+  margin-left: 300px;
+}
+.sign-landbutton {
+  font-size: 2.0em;
+  padding: 10px 20px;
+  border: none; /* Removed border */
+  background: rgba(61, 101, 221, 0.8);
+  color: black;
+  cursor: pointer;
+  border-radius: 5px;
+  align-content: left;
+  margin-left: 370px;
+  margin-top: 200px;
+}
+
+.landbutton:hover {
+  background: rgb(137, 233, 150);
+}
+
+.landbox .button-container {
+  display: flex;
+  flex-direction: column; /* Align buttons vertically */
+  gap: 10px; /* Add space between buttons */
+  margin-top: 90px; /* Add margin to move buttons down */
+}

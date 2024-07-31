@@ -1,0 +1,59 @@
+/* src/components/UserDetails.css */
+.user-details {
+  margin-top:5% ;
+  width: 95%;
+  padding: 20px;
+  background: linear-gradient(135deg, #853439 0%, #eb7648 100%);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+}
+
+.user-details h2 {
+  color: #fff;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.user-details label {
+  display: block;
+  margin-bottom: 10px;
+  color: #fff;
+  font-weight: bold;
+}
+
+.user-details input,
+.user-details select,
+.user-details textarea {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.user-details input[type="color"] {
+  padding: 0;
+  height: 40px;
+}
+
+.user-details button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #6a5fff;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.user-details button:hover {
+  background-color: #fe7bf7;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
