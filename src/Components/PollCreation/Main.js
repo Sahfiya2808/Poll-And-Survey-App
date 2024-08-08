@@ -4,7 +4,7 @@ import UserDetails from './UserDetails';
 import CreatePoll from './CreatePoll';
 
 function Main() {
-  const initialPollDetails = {
+  const [pollDetails, setPollDetails] = useState({
     pollType: '',
     question: '',
     options: [],
@@ -19,9 +19,7 @@ function Main() {
     matrixRows: [],
     matrixColumns: [],
     images: [],
-  };
-
-  const [pollDetails, setPollDetails] = useState(initialPollDetails);
+  });
 
   const handlePollDetailsChange = (details) => {
     setPollDetails((prevDetails) => ({
@@ -30,17 +28,15 @@ function Main() {
     }));
   };
 
-  const handleReset = () => {
-    setPollDetails(initialPollDetails);
-  };
+  const loggedInUserId = localStorage.getItem('loggedInUserId');
 
   return (
     <div className="app-container">
-      <div className="mainleft-panel">
+      <div className="left-panel">
         <UserDetails pollDetails={pollDetails} onPollDetailsChange={handlePollDetailsChange} />
       </div>
-      <div className="mainright-panel">
-        <CreatePoll pollDetails={pollDetails} onReset={handleReset} />
+      <div className="right-panel">
+      <CreatePoll pollDetails={pollDetails} userId={loggedInUserId} />
       </div>
     </div>
   );

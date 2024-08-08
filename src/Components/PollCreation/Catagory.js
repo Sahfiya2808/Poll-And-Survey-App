@@ -42,8 +42,8 @@ const categories = [
               <option key={index} value={category}>{category}</option>
             ))}
           </select>
-          <button className="catsubmit-button" onClick={handleSubmit}>Submit</button>
-          <button className="catclose-button" onClick={onClose}>Close</button>
+          <button className="submit-button" onClick={handleSubmit}>Submit</button>
+          <button className="close-button" onClick={onClose}>Close</button>
         </div>
       </div>
     );

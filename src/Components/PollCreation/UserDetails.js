@@ -39,7 +39,7 @@ function UserDetails({ pollDetails, onPollDetailsChange }) {
       options: newOptions,
     }));
   };
- 
+
   const handleAddOption = () => {
     setLocalPollDetails((prevDetails) => ({
       ...prevDetails,
@@ -60,91 +60,69 @@ function UserDetails({ pollDetails, onPollDetailsChange }) {
   };
 
   return (
-    <div className="user-details">
-      <h2>Poll Details</h2>
-      <div className="form-group">
-        <label htmlFor="pollType">Poll Type</label>
-        <select id="pollType" name="pollType" value={localPollDetails.pollType} onChange={handlePollTypeChange}>
-          <option value="">Select Poll Type</option>
-          <option value="Single Choice Polls">Single Choice Polls</option>
-          <option value="Multiple Choice Polls">Multiple Choice Polls</option>
-          <option value="Rating Polls">Rating Polls</option>
-          <option value="Yes/No Polls">Yes/No Polls</option>
-          <option value="Ranking Polls">Ranking Polls</option>
-          <option value="Open-Ended Polls">Open-Ended Polls</option>
-          <option value="Matrix Polls">Matrix Polls</option>
-          <option value="Demographic Polls">Demographic Polls</option>
-          <option value="Poll with Comments">Poll with Comments</option>
-          <option value="Image Polls">Image Polls</option>
-          <option value="Time-based Polls">Time-based Polls</option>
-          <option value="Conditional Polls">Conditional Polls</option>
-        </select>
-      </div>
-      <div className="form-group">
-        <label htmlFor="question">Question</label>
-        <input
-          type="text"
-          id="question"
-          name="question"
-          value={localPollDetails.question}
-          onChange={handleChange}
-        />
-      </div>
-      {localPollDetails.pollType === 'Multiple Choice Polls' && (
+    <div>
+      <h2 className='poll-details-heading'>Poll Details</h2>
+      <div className="user-details">
         <div className="form-group">
-          <label>Options</label>
-          {localPollDetails.options.map((option, index) => (
-            <input
-              key={index}
-              type="text"
-              value={option}
-              onChange={(e) => handleOptionsChange(e, index)}
-            />
-          ))}
-          <button onClick={handleAddOption}>Add Option</button>
+          <label className="user-label" htmlFor="pollType">Poll Type</label>
+          <select className="tag" id="pollType" name="pollType" value={localPollDetails.pollType} onChange={handlePollTypeChange}>
+            <option value="">Select Poll Type</option>
+            <option value="Single Choice Polls">Single Choice Polls</option>
+            <option value="Multiple Choice Polls">Multiple Choice Polls</option>
+            <option value="Rating Polls">Rating Polls</option>
+            <option value="Yes/No Polls">Yes/No Polls</option>
+            <option value="Ranking Polls">Ranking Polls</option>
+            <option value="Open-Ended Polls">Open-Ended Polls</option>
+            <option value="Matrix Polls">Matrix Polls</option>
+            <option value="Demographic Polls">Demographic Polls</option>
+            <option value="Poll with Comments">Poll with Comments</option>
+            <option value="Image Polls">Image Polls</option>
+            <option value="Time-based Polls">Time-based Polls</option>
+            <option value="Conditional Polls">Conditional Polls</option>
+          </select>
         </div>
-      )}
-      <div className="form-group">
-        <label htmlFor="fontFamily">Font Family</label>
-        <select id="fontFamily" name="fontFamily" value={localPollDetails.style.fontFamily} onChange={handleStyleChange}>
-          {fontFamilies.map((font) => (
-            <option key={font} value={font}>
-              {font}
-            </option>
-          ))}
-        </select>
+        <div className="form-group">
+          <label className="user-label" htmlFor="question">Question</label>
+          <input
+            className="tag"
+            type="text"
+            id="question"
+            name="question"
+            value={localPollDetails.question}
+            onChange={handleChange}
+          />
+        </div>
+        {(localPollDetails.pollType === 'Multiple Choice Polls' || localPollDetails.pollType === 'Single Choice Polls') && (
+          <div>
+            <label className="user-label">Options</label>
+            {localPollDetails.options.slice(0, 5).map((option, index) => (
+              <div key={index} className="input-container">
+                <input
+                  className='tag'
+                  key={index}
+                  type="text" 
+                  value={option}
+                  onChange={(e) => handleOptionsChange(e, index)}
+                />
+              </div>
+            ))}
+            {localPollDetails.options.length >= 5 && (
+              <div style={{color:"red"}} className="option-limit-message">Option limit reached</div>
+            )}
+            <center>
+              <button
+                className='buttonm add-option-button'
+                onClick={handleAddOption}
+                disabled={localPollDetails.options.length >= 5}
+              >
+                Add Option
+              </button>
+            </center>
+          </div>
+        )}
+        
+        <center><button className="buttonm" onClick={handleSaveChanges}>Save Changes</button></center>
       </div>
-      <div className="form-group">
-        <label htmlFor="fontSize">Font Size</label>
-        <input
-          type="text"
-          id="fontSize"
-          name="fontSize"
-          value={localPollDetails.style.fontSize}
-          onChange={handleStyleChange}
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="fontColor">Font Color</label>
-        <input
-          type="color"
-          id="fontColor"
-          name="fontColor"
-          value={localPollDetails.style.fontColor}
-          onChange={handleStyleChange}
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="backgroundColor">Background Color</label>
-        <input
-          type="color"
-          id="backgroundColor"
-          name="backgroundColor"
-          value={localPollDetails.style.backgroundColor}
-          onChange={handleStyleChange}
-        />
-      </div>
-      <button onClick={handleSaveChanges}>Save Changes</button>
     </div>
   );
 }

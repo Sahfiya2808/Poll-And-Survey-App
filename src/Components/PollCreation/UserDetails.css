@@ -1,59 +1,65 @@
 /* src/components/UserDetails.css */
+.poll-details-heading {
+  color: black;
+  font-size: 33px; /* Adjust as needed */
+  margin-bottom: 0px; /* Adjust as needed */
+  text-align: center;
+}
+
 .user-details {
-  margin-top:5% ;
-  width: 95%;
-  padding: 20px;
-  background: linear-gradient(135deg, #853439 0%, #eb7648 100%);
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  margin-bottom: 20px;
+  margin-top: 10%; /* Decreased margin-top */
+  padding: 15px; /* Decreased padding */
+  background: linear-gradient(135deg, #C0C0C0 0%, #A9A9A9 100%); /* Silver gradient background */
+  border-radius: 8px; /* Decreased border-radius */
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); /* Decreased box-shadow */
+  margin-bottom: 15px; /* Decreased margin-bottom */
+  overflow: hidden;
+  margin-top: 50px;
 }
 
-.user-details h2 {
+.head2 {
   color: #fff;
-  font-size: 24px;
-  margin-bottom: 20px;
+  font-size: 20px; /* Decreased font-size */
+  margin-bottom: 15px; /* Decreased margin-bottom */
 }
 
-.user-details label {
+.user-label {
   display: block;
-  margin-bottom: 10px;
-  color: #fff;
+  margin-bottom: 8px; /* Decreased margin-bottom */
+  color: black;
   font-weight: bold;
 }
 
-.user-details input,
-.user-details select,
-.user-details textarea {
+.tag {
   width: 100%;
-  padding: 10px;
+  padding: 8px; /* Decreased padding */
   border: none;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  font-size: 16px;
+  border-radius: 4px; /* Decreased border-radius */
+  margin-bottom: 15px; /* Decreased margin-bottom */
+  font-size: 14px; /* Decreased font-size */
 }
 
-.user-details input[type="color"] {
-  padding: 0;
-  height: 40px;
-}
-
-.user-details button {
-  width: 100%;
-  padding: 10px;
+.buttonm {
+  width: 250px; /* Decreased width */
+  padding: 8px; /* Decreased padding */
   border: none;
-  border-radius: 5px;
-  background-color: #6a5fff;
+  border-radius: 4px; /* Decreased border-radius */
+  background-color: #002F6C;
   color: #fff;
-  font-size: 16px;
+  font-size: 14px; /* Decreased font-size */
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-top: 10px; /* Added margin-top to create space between Add Option and Save Changes buttons */
 }
 
-.user-details button:hover {
-  background-color: #fe7bf7;
+.buttonm:hover {
+  background-color: #639be3;
+}
+
+.input-container {
+  margin-bottom: 8px; /* Decreased margin-bottom */
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 12px; /* Decreased margin-bottom */
 }

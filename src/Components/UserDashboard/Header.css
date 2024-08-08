@@ -12,14 +12,25 @@
   font-weight: bold;
 }
 
-.nav a {
+.nav {
+  display: flex;
+  gap: 15px;
+}
+
+.nav-link {
   margin: 0 15px;
   text-decoration: none;
   color: #333;
+  cursor: pointer;
 }
 
-.auth-buttons .sign-up, .auth-buttons .sign-in {
-  margin-left: 10px;
+.auth-buttons {
+  display: flex;
+}
+
+.auth-buttons .sign-up
+ {
+  
   padding: 10px 20px;
   border: none;
   cursor: pointer;
@@ -28,8 +39,7 @@
 .auth-buttons .sign-up {
   background-color: orange;
   color: white;
+  margin-right: 60px;
 }
 
-.auth-buttons .sign-in {
-  background-color: lightgray;
-}
+

@@ -1,13 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './NewSignin.css';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const NewSignin = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
 
-  const navigate=useNavigate();
-  const handleNavigation = (path) => () => {
-    navigate(path);
-  }
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent default form submission
+
+    try {
+      const response = await axios.get('http://localhost:8080/api/users/fetch');
+      const user = response.data.find((user) => user.username === username);
+      if (user) {
+        if (user.password === password) {
+          localStorage.setItem('loggedInUserId', user.userId);
+          setSuccess(true);
+          navigate('/userDashboard'); // Redirect to dashboard on successful login
+        } else {
+          setError('Invalid username or password');
+          setSuccess(false);
+        }
+      } else {
+        setError('Invalid username or password');
+        setSuccess(false);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setError('An error occurred while logging in. Please try again later.');
+      setSuccess(false);
+    }
+  };
 
   return (
     <div className="signin-container">
@@ -17,18 +45,35 @@ const NewSignin = () => {
       <div className="signin-right-side">
         <div className="sign-in-box">
           <h2 className="signinh2">Sign in</h2>
-          <div className="email-login">
-            <div className="input-group">
-              <h3 className="input-label">Enter email</h3>
-              <input type="text" placeholder="Email" />
+          <form onSubmit={handleSubmit}>
+            <div className="email-login">
+              <div className="input-group">
+                <h3 className="input-label">Enter username</h3>
+                <input
+                  type="text"
+                  placeholder="Username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </div>
+              <div className="input-group">
+                <h3 className="input-label">Enter password</h3>
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+              <button type="submit" className="sign-in-btn">
+                Sign In
+              </button>
             </div>
-            <div className="input-group">
-              <h3 className="input-label">Enter password</h3>
-              <input type="password" placeholder="Password" />
-            </div>
-            <button className="sign-in-btn" onClick={handleNavigation('/userdashboard')}>Sign In</button>
-          </div>
-          <p className="signup-link">Don't have an account? <a href="/NewSignup">Sign up</a></p>
+            {error && <p className="error-message">{error}</p>}
+            <p className="signup-link">
+              Don't have an account? <a href="/NewSignup">Sign up</a>
+            </p>
+          </form>
         </div>
       </div>
     </div>

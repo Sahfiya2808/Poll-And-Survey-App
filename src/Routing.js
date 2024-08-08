@@ -16,6 +16,11 @@ import SocialMedia from './Components/PollDashboard/SocialMedia';
 import Dashboard from './Components/PollDashboard/Dashboard';
 import Settings from './Components/PollDashboard/Settings';
 
+import Howitworks from './Components/UserHeader/Howitworks';
+import Explore from './Components/UserHeader/Explore';
+import Premium from './Components/UserHeader/Premium';
+import DisplayPolls from './Components/UserHeader/DisplayPolls';
+
 const Routing = () => {
     return (
         <Router>
@@ -35,6 +40,11 @@ const Routing = () => {
               <Route path="/entertainment" element={<Entertainment />} />
               <Route path="/government" element={<Government />} />
               <Route path="/Settings" element={<Settings/>}/>
+
+              <Route path="Howitworks" element={<Howitworks/>}/>
+              <Route path="Explore" element={<Explore/>}/>
+              <Route path="Premium" element={<Premium/>}/>
+              <Route path="DisplayPolls" element={<DisplayPolls/>}/>
             </Routes>
         </Router>
     );

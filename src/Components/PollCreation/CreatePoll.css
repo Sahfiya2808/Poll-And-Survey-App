@@ -1,4 +1,3 @@
-
 .create-poll {
   align-content: center;
   margin: 20%;
@@ -6,8 +5,7 @@
   padding: 10px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  overflow-y:auto;
-
+  margin-top: 50px;
 }
 
 .create-poll h2 {
@@ -29,12 +27,12 @@
   align-items: center;
 }
 
-.createstar {
+.star {
   font-size: 24px;
   cursor: pointer;
 }
 
-.createstar.filled {
+.star.filled {
   color: gold;
 }
 
@@ -54,16 +52,12 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.option-textarea {
+textarea {
   width: 100%;
-  height: 150px; /* Adjust the height as needed */
-  padding: 10px; /* Add some padding for better readability */
-  border: 1px solid #ccc; /* Add a border */
-  border-radius: 4px; /* Round the corners */
-  font-size: 16px; /* Adjust the font size */
-  resize: vertical; /* Allow vertical resizing */
-  box-sizing: border-box; /* Include padding and border in element's total width and height */
-
+  height: 100px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 input[type="number"],
@@ -76,8 +70,8 @@ select {
 }
 
 
-.btns {
-  background-color: #4CAF50;
+.btnscreate {
+  background-color: #002F6C;
   border: none;             
   color: white;            
   padding: 15px 32px;       
@@ -89,12 +83,13 @@ select {
   cursor: pointer;          
   border-radius: 12px;       
   transition: background-color 0.3s, transform 0.3s; 
+  width:200px;
 }
-.btns:hover {
-  background-color: #45a049; 
+.btnscreate:hover {
+  background-color: #66b0ea; 
   transform: scale(1.05);    
 }
-.btns:focus {
+.btnscreate:focus {
   outline: none;             
   box-shadow: 0 0 10px #719ECE; 
 }
@@ -107,12 +102,9 @@ select {
   align-items: center;
 }
 
-.createstar {
+.star {
   font-size: 2rem;
   cursor: pointer;
   color: #ddd;
   transition: color 0.2s;
 }
-
-
-

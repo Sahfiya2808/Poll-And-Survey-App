@@ -1,129 +1,125 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import './Category.css';
 import { useNavigate } from 'react-router-dom';
+import PollOptions from '../PollOptions';
 
-const Entertainment = () => {
-    const navigate = useNavigate();
-    const [polls, setPolls] = useState([
-        {
-            id: 1,
-            type: 'multiple',
-            question: 'Who is your favorite actor?',
-            options: ['Actor A', 'Actor B', 'Actor C'],
-            votes: [0, 0, 0],
-            selected: []
-        },
-        {
-            id: 2,
-            type: 'yesno',
-            question: 'Do you like action movies?',
-            options: ['Yes', 'No'],
-            votes: [0, 0],
-            selected: null
-        },
-        {
-            id: 3,
-            type: 'single',
-            question: 'Which is your favorite movie of 2023?',
-            options: ['Movie A', 'Movie B', 'Movie C'],
-            votes: [0, 0, 0],
-            selected: null
-        },
-        {
-            id: 4,
-            type: 'multiple',
-            question: 'Which genre do you prefer?',
-            options: ['Action', 'Comedy', 'Drama', 'Horror'],
-            votes: [0, 0, 0, 0],
-            selected: []
-        },
-        {
-            id: 5,
-            type: 'yesno',
-            question: 'Do you enjoy watching TV series?',
-            options: ['Yes', 'No'],
-            votes: [0, 0],
-            selected: null
-        },
-        {
-            id: 6,
-            type: 'single',
-            question: 'Which streaming service do you use the most?',
-            options: ['Netflix', 'Amazon Prime', 'Disney+', 'Hulu'],
-            votes: [0, 0, 0, 0],
-            selected: null
-        }
-    ]);
+const Entertainment= () => {
+  const [polls, setPolls] = useState([]);
+  const [responses, setResponses] = useState({});
+  const [currentPage, setCurrentPage] = useState(0); // To track the current page of polls
+  const pollsPerPage = 2; // Number of polls to display per page
+  const navigate = useNavigate();
 
-    const handleVote = (pollId, optionIndex) => {
-        setPolls(polls.map(poll =>
-            poll.id === pollId
-                ? { ...poll, votes: poll.votes.map((vote, index) => index === optionIndex ? vote + 1 : vote) }
-                : poll
-        ));
+  useEffect(() => {
+    const fetchPolls = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/polls/category/Entertainment');
+        setPolls(response.data);
+      } catch (error) {
+        console.error('Error fetching polls:', error);
+      }
     };
 
-    const handleOptionChange = (pollId, optionIndex) => {
-        setPolls(polls.map(poll => {
-            if (poll.id === pollId) {
-                if (poll.type === 'multiple') {
-                    const selected = poll.selected.includes(optionIndex)
-                        ? poll.selected.filter(index => index !== optionIndex)
-                        : [...poll.selected, optionIndex];
-                    return { ...poll, selected };
-                } else {
-                    return { ...poll, selected: optionIndex };
-                }
-            }
-            return poll;
-        }));
+    fetchPolls();
+  }, []);
+
+  const handleResponseChange = (pollId, responseType, response) => {
+    setResponses(prevResponses => ({
+      ...prevResponses,
+      [pollId]: { responseType, response }
+    }));
+  };
+
+  const handleSubmit = async (pollId) => {
+    const publicId = localStorage.getItem('publicId');
+    const category = 'Education';
+    const currentDate = new Date().toISOString();
+
+    const { responseType, response } = responses[pollId] || {};
+
+    if (!responseType || !response) {
+      alert('Please select an option before submitting.');
+      return;
+    }
+
+    const data = {
+      pollId,
+      publicId,
+      category,
+      date: currentDate,
+      responseType,
+      response
     };
 
-    const handleSubmit = (poll) => {
-        if (poll.type === 'multiple') {
-            poll.selected.forEach(index => handleVote(poll.id, index));
-        } else {
-            handleVote(poll.id, poll.selected);
-        }
-        alert(`Thank you for voting on: ${poll.question}`);
-    };
+    try {
+      await axios.post('http://localhost:8080/api/public-polls', data);
+      alert('Your response has been submitted!');
+    } catch (error) {
+      console.error('Error submitting poll response:', error);
+      alert('There was an error submitting your response. Please try again.');
+    }
+  };
 
-    return (
-        <div className="entertainment-poll-container">
-            <h1>Entertainment Poll</h1>
-            <p>We value your opinion on various entertainment topics. Please take a moment to participate in our poll and share your thoughts.</p>
-            <div className="polls-list">
-                {polls.map(poll => (
-                    <div key={poll.id} className="poll-item">
-                        <p>{poll.question}</p>
-                        <div className="options">
-                            {poll.options.map((option, index) => (
-                                <label key={index} className="option-label">
-                                    {poll.type === 'multiple' ? (
-                                        <input
-                                            type="checkbox"
-                                            checked={poll.selected.includes(index)}
-                                            onChange={() => handleOptionChange(poll.id, index)}
-                                        />
-                                    ) : (
-                                        <input
-                                            type="radio"
-                                            name={`poll-${poll.id}`}
-                                            checked={poll.selected === index}
-                                            onChange={() => handleOptionChange(poll.id, index)}
-                                        />
-                                    )}
-                                    {option} ({poll.votes[index]} votes)
-                                </label>
-                            ))}
-                        </div>
-                        <button onClick={() => handleSubmit(poll)} className="submit-button">Submit</button>
-                    </div>
-                ))}
-            </div>
-            <button className="allback-button" onClick={() => navigate('/publicdashboard')}>Back to Dashboard</button>
-        </div>
-    );
+  const handleNextPage = () => {
+    if ((currentPage + 1) * pollsPerPage < polls.length) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const displayedPolls = polls.slice(currentPage * pollsPerPage, (currentPage + 1) * pollsPerPage);
+
+  return (
+    <div className="polls-wrapper" >
+      <div className="education-poll-container">
+        <center>
+          <h1>Entertainment Polls</h1>
+          <p>We value your opinion on various entertainment topics. Please take a moment to participate in our poll and share your thoughts.</p>
+        </center>
+        <button style={{color:"white"}}className="back-buttons" onClick={() => navigate('/publicdashboard')}>Home</button>
+      </div>
+      {polls.length === 0 ? (
+        <>
+          <div className="no-polls-message">Currently, no polls are available.</div>
+          <center>
+            <img src="https://img.freepik.com/free-vector/hand-drawn-no-data-concept_52683-127829.jpg?ga=GA1.1.459237625.1721796584&semt=ais_hybrid" alt="Avatar" className="avatar" />
+          </center>
+        </>
+      ) : (
+        <>
+          <div className="polls-container">
+            {displayedPolls.map((pollDetails) => {
+              const style = {
+                fontFamily: pollDetails.fontFamily || 'Arial',
+                fontSize: `${pollDetails.fontSize}px` || '16px',
+                color: pollDetails.fontColor || '#000',
+                backgroundColor: pollDetails.backgroundColor || '#fff',
+              };
+              return (
+                <div key={pollDetails.pollId} className="poll-card" style={style}>
+                  <div className="poll-title" style={{ fontSize: `${pollDetails.fontSize}px` }}>
+                    <strong>{pollDetails.question}</strong>
+                  </div>
+                  <PollOptions pollDetails={pollDetails} onResponseChange={handleResponseChange} />
+                  <button className="submit" style={{ width: "100px",marginTop:"10px",backgroundColor:"rgb(12, 57, 82)"}} onClick={() => handleSubmit(pollDetails.pollId)}>Submit</button>
+                </div>
+              );
+            })}
+          </div>
+          <div className="navigation-arrows">
+            <button className="arrow left-arrow" onClick={handlePreviousPage} disabled={currentPage === 0}>&#8249;</button>
+            <button className="arrow right-arrow" onClick={handleNextPage} disabled={(currentPage + 1) * pollsPerPage >= polls.length}>&#8250;</button>
+          </div>
+        </>
+      )}
+    </div>
+  );
 };
 
 export default Entertainment;
