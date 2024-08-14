@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './NewSignup.css'; // Import the CSS file
+import addServices from '../../Service/AddServices';
 
 const NewSignup = () => {
     const [formData, setFormData] = useState({
@@ -41,23 +42,12 @@ const NewSignup = () => {
             return;
         }
         try {
-            const response = await fetch('http://localhost:8080/api/users/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-            if (response.ok) {
-                setShowMessage(true);
-                setTimeout(() => {
-                    setShowMessage(false);
-                    navigate('/login'); // Redirect to login page after a short delay
-                }, 2000); // Delay for 2 seconds to display the message
-            } else {
-                const data = await response.json();
-                setErrors({ apiError: data.message });
-            }
+            const response = await addServices.createUser(formData);
+            setShowMessage(true);
+            setTimeout(() => {
+                setShowMessage(false);
+                navigate('/login'); // Redirect to login page after a short delay
+            }, 2000); // Delay for 2 seconds to display the message
         } catch (error) {
             setErrors({ apiError: 'An error occurred. Please try again later.' });
         }
@@ -69,7 +59,6 @@ const NewSignup = () => {
 
     return (
         <div className="signupmain-container">
-            
             <div className="signupform-wrapper">
                 <div className="signup-container">
                     <h2>Sign Up</h2>
@@ -129,13 +118,12 @@ const NewSignup = () => {
                             {errors.businessType && <p className="signuperror-text">{errors.businessType}</p>}
                         </div>
                         <div className="signupform-group">
-                            <label>Target Group:</label>
-                            <select
-                                name="targetGroup"
+                            <label className="targetgap">Target Group:</label>
+                            <select 
+                                name="targetGroup" 
                                 value={formData.targetGroup}
                                 onChange={handleChange}
-                                className={errors.targetGroup ? 'input-error' : ''}
-                            >
+                                className={errors.targetGroup ? 'input-error' : ''}>
                                 <option value="">Select target group</option>
                                 <option value="12-17">12-17</option>
                                 <option value="18-24">18-24</option>
@@ -155,6 +143,10 @@ const NewSignup = () => {
                         <button onClick={handleClick}>Log In</button>
                     </div>
                 </div>
+            </div>
+            <div className="signupimage-container">
+                {/* Add your image here */}
+                <img src="https://img.freepik.com/free-vector/woman-reading-business-agreement-special-offer-contract-clipboard-deal-arrangement-terms-use-document-studying-paper-form-vector-isolated-concept-metaphor-illustration_335657-4333.jpg" alt="Signup" />
             </div>
         </div>
     );

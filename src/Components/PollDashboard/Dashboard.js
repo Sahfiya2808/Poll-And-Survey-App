@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -24,9 +24,17 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import CircularProgress from '@mui/material/CircularProgress';
+import PollCharts from './PollCharts';
+import PollOptions from './PollOptions';
 
+import addServices from '../../Service/AddServices';
 // Styling components
 import './Dashboard.css';
+import ImageTextSection from './ImageTextSection';
+import Numberdisplay from './Numberdisplay';
+import Buzz from './Buzz';
+import FAQPage from './FAQPage';
+
 
 const drawerWidth = 240;
 
@@ -96,22 +104,103 @@ const ScrollableContainer = styled(Box)(({ theme }) => ({
   borderRadius: '8px',
 }));
 
-const Dashboard = () => {
+
+
+const Dashboard = () => { 
   const [categoriesOpen, setCategoriesOpen] = useState(true); // Always show "Vote Here" subtopics
 
   const navigate = useNavigate();
 
   const handleNavigation = (path) => () => {
     navigate(path);
+  
   };
+    const [categoryCounts, setCategoryCounts] = useState([]);
+    const [error, setError] = useState(null);
+
+    const [polls, setPolls] = useState([]);
+  
+  const [responses, setResponses] = useState({});
+  const [submittedPolls, setSubmittedPolls] = useState(new Set());
+  const publicId = localStorage.getItem('publicId'); 
+
+    const [pollData, setPollData] = useState([]); const [pollCounts, setPollCounts] = useState({});
+  
+    const fetchCategoryCounts = async () => {
+      try {
+        const response = await addServices.fetchVoteCountByCategory();
+        console.log(response);
+        setCategoryCounts(response);
+      } catch (error) {
+        console.error('Error fetching category counts:', error);
+        setError('An error occurred while fetching category counts. Please try again later.');
+      }
+    };
+  
+    useEffect(() => {
+        const fetchPolls = async () => {
+          try {
+            const response = await addServices.fetchPublicPolls();
+            const data = response;
+    
+            // Count responses per pollId
+            const counts = data.reduce((acc, poll) => {
+              acc[poll.pollId] = (acc[poll.pollId] || 0) + 1;
+              return acc;
+            }, {});
+    
+            setPollCounts(counts);
+    
+            // Sort pollIds by their counts in descending order
+            const sortedPollIds = Object.entries(counts)
+              .sort(([, countA], [, countB]) => countB - countA)
+              .map(([pollId]) => parseInt(pollId));
+    
+            // Fetch detailed poll data for the top 10 sorted pollIds
+            const detailedPolls = await Promise.all(
+              sortedPollIds.slice(0, 10).map(async (pollId) => {
+                const pollDetails = await addServices.fetchPollById(pollId);
+                return {
+                  ...pollDetails,
+                  responseCount: counts[pollId],
+                };
+              })
+            );
+    
+    
+            setPolls(detailedPolls);
+          } catch (error) {
+            console.error('Error fetching polls:', error);
+          }
+        };
+    
+        
+      fetchPolls();
+      fetchCategoryCounts();
+    }, []);
+    const handleResponseChange = (pollId, responseType, response) => {
+      setResponses(prevResponses => ({
+        ...prevResponses,
+        [pollId]: { responseType, response }
+      }));
+    };
+  
+    const handleSubmit = async (pollId) => {
+      const publicId = localStorage.getItem('publicId');
+      if (!publicId) {
+        alert('Please sign in to submit a response.');
+        return;
+      }
+    }
+  
 
   return (
     <Root>
       <CssBaseline />
       <AppBarStyled position="fixed" className="appBarStyled">
         <Toolbar>
-          <Typography variant="h6" noWrap>
-            Dashboard
+          <Typography variant="h6" noWrap style={{color:'black'}}>
+            Pollify
           </Typography>
           
           <div className="toolbarRight">
@@ -119,7 +208,7 @@ const Dashboard = () => {
               Want to create Poll?
             </Typography>
             <img src="https://i3.wp.com/media0.giphy.com/media/xyWqUFUZ857c7jDUTO/source.gif?ssl=1" alt="Poll Gif" className="poll-gif" />
-            <Button color="inherit" style={{ marginLeft: '10px' }} onClick={handleNavigation('/NewSignin')}>Register</Button>
+            <Button color="inherit" style={{ marginLeft: '10px' } } onClick={handleNavigation('/NewSignin')}>Register</Button>
             <Button color="inherit" onClick={handleNavigation('/NewSignup')}>Sign Up</Button>
           </div>
         </Toolbar>
@@ -155,41 +244,60 @@ const Dashboard = () => {
             <ListItemIcon><AccountBalanceIcon /></ListItemIcon>
             <ListItemText primary="Government" />
           </ListItem>
-          <ListItem button onClick={handleNavigation('/settings')}>
+          <ListItem button onClick={handleNavigation('/Lead')}>
             <ListItemIcon><DashboardIcon /></ListItemIcon>
-            <ListItemText primary="Settings" />
+            <ListItemText primary="Leaderboard" />
           </ListItem>
         </List>
       </DrawerStyled>
       <Content className="content">
         <ToolbarStyled />
+
+        <section>
+          <div>
+          <ImageTextSection/>
+          </div>
+        </section>
         <Container className="centeredContainer gap">
-          <Typography variant="h4" gutterBottom className="sectionTitle">
+
+        <Typography variant="h4" gutterBottom className="sectionTitle">
             What's Trending
           </Typography>
-          <Grid container spacing={2} className="gridContainer">
-            <Grid item xs={12} sm={6} md={4} className="gridItem">
-              <BoxStyled component={Link} to="/entertainment" className="boxStyled">
-                <img src="https://xoyondo.com/img/apoll_en2.png" alt="Trending Polls" />
-                
-              </BoxStyled>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4} className="gridItem">
-              <BoxStyled component={Link} to="/trending-polls" className="boxStyled">
-                <img src="https://xoyondo.com/img/poll-tool-setup-en.png" alt="Trending Polls" />
-                
-              </BoxStyled>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4} className="gridItem">
-              <BoxStyled component={Link} to="/trending-polls" className="boxStyled">
-                <img src="https://support.content.office.net/en-us/media/d3be104a-cb32-4937-bf8b-2ac0cc2bf902.png" alt="Trending Polls" />
-                
-              </BoxStyled>
-            </Grid>
-          </Grid>
+          <div className="horizontalScrollContainer">
+            {polls.map(poll => {
+              const style = {
+                fontFamily: poll.fontFamily || 'Arial',
+                fontSize: '16px',
+                color: poll.fontColor || '#000',
+                backgroundColor: poll.backgroundColor || '#fff',
+              };
+              const isSubmitted = submittedPolls.has(poll.pollId);
+
+              return (
+                <div key={poll.pollId} className="poll-item" style={style}>
+                    <div className="poll-titles" >
+                      <strong>{poll.question}</strong>
+                    </div>
+                    <PollOptions pollDetails={poll} onResponseChange={handleResponseChange} />
+                    <button
+                      className="submit"
+                      style={{ width: "150px", marginTop: "10px", backgroundColor: isSubmitted ? "#B0B0B0" : "rgb(12, 57, 82)" }}
+                      onClick={() => handleSubmit(poll.pollId)}
+                      disabled={isSubmitted}
+                    >
+                      {isSubmitted ? 'Submitted' : 'Submit'}
+                    </button>
+                </div>
+              );
+            })}
+          </div>
+
+            
+            
+          
         </Container>
 
-        <Container className="centeredContainer">
+        {/*<Container className="centeredContainer">
           <Typography variant="h4" gutterBottom className="sectionTitle">
             Based On Your Interest
           </Typography>
@@ -213,27 +321,18 @@ const Dashboard = () => {
               </BoxStyled>
             </Grid>
           </Grid>
-        </Container>
+        </Container>*/}
 
         <Container className="centeredContainer">
-          <Typography variant="h4" gutterBottom className="sectionTitle">
-            Performance Analysis
-          </Typography>
-          <Grid container spacing={2} className="gridContainer">
-            <Grid item xs={12} sm={6} md={4} className="gridItem">
-              <CircularProgressStyled
-                variant="determinate"
-                value={70}
-                size={100}
-                thickness={4}
-                color="success"
-              />
-              <Typography variant="h6" color="textSecondary">70%</Typography>
-            </Grid>
-          </Grid>
-        </Container>
+      <Typography variant="h4" gutterBottom className="sectionTitle">
+        Performance Analysis
+      </Typography>
+      
+      <PollCharts/>
+     
+    </Container>
 
-        <Container className="centeredContainer">
+        {/*<Container className="centeredContainer">
           <Typography variant="h4" gutterBottom className="sectionTitle">
             Your Previous Votes
           </Typography>
@@ -242,25 +341,44 @@ const Dashboard = () => {
               <Grid item xs={12} sm={6} md={4}>
                 <BoxStyled>
                   <img src="https://support.content.office.net/en-us/media/6683b5e1-9ef5-4703-b011-3732ec344a78.png" alt="Previous Vote 1" />
-                  <Typography variant="h6" className="title">Previous Vote 1</Typography>
+                  
                 </BoxStyled>
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
                 <BoxStyled>
                   <img src="https://mattipaukkonen.com/wp-content/uploads/2019/11/image-25.png?w=785" alt="Previous Vote 2" />
-                  <Typography variant="h6" className="title">Previous Vote 2</Typography>
+                  
                 </BoxStyled>
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
                 <BoxStyled>
                   <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsR-yqyJmXqO2G3BaZR2MH2hW74uqB37hbW8inYj2jbwQ3xtga0G8n34-efAc6uZRsMes&usqp=CAU" alt="Previous Vote 3" />
-                  <Typography variant="h6" className="title">Previous Vote 3</Typography>
+                  
                 </BoxStyled>
               </Grid>
-              {/* Add more cards as needed */}
+              {/* Add more cards as needed *
             </Grid>
           </ScrollableContainer>
-        </Container>
+        </Container>*/}
+        
+        
+        <container>
+          <div>
+            <Numberdisplay/>
+          </div>
+          </container>
+          
+          <container>
+            <div>
+              <Buzz/>
+            </div>
+          </container>
+
+          <container>
+            <div>
+              <FAQPage/>
+            </div>
+          </container>
       </Content>
     </Root>
   );

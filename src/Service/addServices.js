@@ -1,24 +1,25 @@
-// src/services/userService.js
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8080/api/users';
-const API_URL2 = 'http://localhost:8080/api/polls';
-const API_URL3 = 'http://localhost:8080/api/public-polls';
-const API_URL4 = 'http://localhost:8080/api/public';
+const API_URL = 'http://localhost:8080/api';
+const API_URL_USERS = `${API_URL}/users`;
+const API_URL_POLLS = `${API_URL}/polls`;
+const API_URL_PUBLIC_POLLS = `${API_URL}/public-polls`;
+const API_URL_PUBLIC = `${API_URL}/public`;
+ 
 
 const getUserName = async (userId) => {
-    try {
-      const response = await axios.get(`${API_URL}`/`${userId}`);
-      return response.data.username; 
-    } catch (error) {
-      console.error('Error fetching user details:', error);
-      throw error;
-    }
-  };
+  try {
+    const response = await axios.get(`${API_URL_USERS}/${userId}`);
+    return response.data.username;
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+    throw error;
+  }
+};
 
 const fetchUsers = async () => {
   try {
-    const response = await axios.get(`${API_URL}`/fetch);
+    const response = await axios.get(`${API_URL_USERS}/fetch`);
     return response.data;
   } catch (error) {
     console.error('Error fetching users:', error);
@@ -27,79 +28,78 @@ const fetchUsers = async () => {
 };
 
 const createUser = async (userData) => {
-    try {
-      const response = await axios.post(`${API_URL}`/add, userData);
-      return response.data;
-    } catch (error) {
-      console.error('Error creating user:', error);
-      throw error;
-    }
-  };
+  try {
+    const response = await axios.post(`${API_URL_USERS}/add`, userData);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating user:', error);
+    throw error;
+  }
+};
 
 const fetchPollsByUser = async (userId) => {
   try {
-    const response = await axios.get(`${API_URL2}`/user/`${userId}`);
+    const response = await axios.get(`${API_URL_POLLS}/user/${userId}`);
     return response.data;
   } catch (error) {
-    console.error('There was an error fetching the polls!', error);
+    console.error('Error fetching polls by user:', error);
     throw error;
   }
 };
 
 const fetchPollById = async (pollId) => {
-    const response = await fetch(`${API_URL2}`/`${pollId}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch poll data');
-    }
-    return response.json();
-  };
+  try {
+    const response = await axios.get(`${API_URL_POLLS}/${pollId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching poll by ID:', error);
+    throw error;
+  }
+};
 
 const createPoll = async (pollData) => {
-    try {
-      const response = await axios.post(API_URL2, pollData);
-      return response.data;
-    } catch (error) {
-      console.error('Error creating poll:', error);
-      if (error.response) {
-        console.error('Error details:', error.response.data);
-      }
-      throw error; // Rethrow the error to handle it in the component
-    }
-  };
-
+  try {
+    const response = await axios.post(API_URL_POLLS, pollData);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating poll:', error);
+    throw error;
+  }
+};
 
 const fetchPollsByCategory = async (category) => {
-    try {
-      const response = await axios.get(`${API_URL2}`/category/`${category}`);
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching polls:', error);
-      throw error;
-    }
-  };
-  
+  try {
+    const response = await axios.get(`${API_URL_POLLS}/category/${category}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching polls by category:', error);
+    throw error;
+  }
+};
 
-  const submitPollResponse = async (data) => {
-    try {
-      const response = await axios.post(`${API_URL3}`, data);
-      return response.data;
-    } catch (error) {
-      console.error('Error submitting poll response:', error);
-      throw error;
-    }
-  };
+const submitPollResponse = async (data) => {
+  try {
+    const response = await axios.post(API_URL_PUBLIC_POLLS, data);
+    return response.data;
+  } catch (error) {
+    console.error('Error submitting poll response:', error);
+    throw error;
+  }
+};
 
-  const fetchPublicPollById = async (pollId) => {
-    const response = await fetch(`${API_URL3}`/polls/`${pollId}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch public poll data');
-    }
-    return response.json();
-  };
+const fetchPublicPollById = async (pollId) => {
+  try {
+    const response = await axios.get(`${API_URL_PUBLIC_POLLS}/polls/${pollId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching public poll by ID:', error);
+    throw error;
+  }
+};
 
 const fetchPublicUsers = async () => {
   try {
-    const response = await axios.get(API_URL4);
+    const response = await axios.get(API_URL_PUBLIC);
     return response.data;
   } catch (error) {
     console.error('Error fetching public users:', error);
@@ -108,29 +108,59 @@ const fetchPublicUsers = async () => {
 };
 
 const addUser = async (nickname, age) => {
-    try {
-      const response = await axios.post(API_URL4, {
-        nickname,
-        age: parseInt(age, 10),
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Error adding user:', error);
-      throw error;
-    }
-  };
-  
+  try {
+    const response = await axios.post(API_URL_PUBLIC, { nickname, age: parseInt(age, 10) });
+    return response.data;
+  } catch (error) {
+    console.error('Error adding user:', error);
+    throw error;
+  }
+};
+
+const deletePoll = async (pollId) => {
+  try {
+    await axios.delete(`${API_URL_POLLS}/${pollId}`);
+  } catch (error) {
+    console.error('Error deleting poll:', error);
+    throw error;
+  }
+};
+
+const fetchVoteCountByCategory = async (publicId) => {
+  try {
+    const response = await axios.get(`${API_URL_PUBLIC_POLLS}/user/${publicId}/votes-by-category`);
+    return response.data;
+    
+  } catch (error) {
+    console.error('Error fetching vote counts by category:', error);
+    throw error;
+  }
+};
+
+const fetchPublicPolls = async () => {
+  try {
+    const response = await axios.get(API_URL_PUBLIC_POLLS);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching public users:', error);
+    throw error;
+  }
+};
+
 
 export default {
-    getUserName,
-    fetchPublicUsers,
-    fetchPollById,
-    addUser,
+  getUserName,
   fetchUsers,
   createUser,
   fetchPollsByUser,
-  submitPollResponse,
-  fetchPollsByCategory ,
+  fetchPollById,
   createPoll,
-  fetchPublicPollById
+  fetchPollsByCategory,
+  submitPollResponse,
+  fetchPublicPollById,
+  fetchPublicUsers,
+  addUser,
+  deletePoll,
+  fetchVoteCountByCategory,
+  fetchPublicPolls
 };

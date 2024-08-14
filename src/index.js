@@ -7,6 +7,8 @@ import reportWebVitals from './reportWebVitals';
 
 
 import Routing from './Routing';
+import FAQPage from './Components/PollDashboard/FAQPage';
+import Lead from './Components/PollDashboard/Lead';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

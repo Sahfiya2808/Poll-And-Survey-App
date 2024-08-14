@@ -1,28 +1,39 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import './Category.css';
 import { useNavigate } from 'react-router-dom';
-import PollOptions from '../PollOptions';
+import PollOptions from './PollOptions';
+import addServices from '../../Service/AddServices';
 
-const Healthcare= () => {
+const Education = () => {
   const [polls, setPolls] = useState([]);
   const [responses, setResponses] = useState({});
-  const [currentPage, setCurrentPage] = useState(0); // To track the current page of polls
-  const pollsPerPage = 2; // Number of polls to display per page
+  const [submittedPolls, setSubmittedPolls] = useState(new Set()); // Track submitted polls
+  const [currentPage, setCurrentPage] = useState(0); // Track current page
+  const pollsPerPage = 3; // Polls per page
   const navigate = useNavigate();
+  const publicId = localStorage.getItem('publicId'); // Retrieve publicId
 
   useEffect(() => {
     const fetchPolls = async () => {
+      if (!publicId) {
+        console.error('Public ID is not available');
+        return;
+      }
+
       try {
-        const response = await axios.get('http://localhost:8080/api/polls/category/Healthcare');
-        setPolls(response.data);
+        const response = await addServices.fetchPollsByCategory('Healthcare');
+        setPolls(response);
+
+        // Retrieve and set submitted polls for the current publicId
+        const submitted = JSON.parse(localStorage.getItem(`submittedPolls_${publicId}`)) || [];
+        setSubmittedPolls(new Set(submitted));
       } catch (error) {
         console.error('Error fetching polls:', error);
       }
     };
 
     fetchPolls();
-  }, []);
+  }, [publicId]); // Depend on publicId
 
   const handleResponseChange = (pollId, responseType, response) => {
     setResponses(prevResponses => ({
@@ -32,8 +43,14 @@ const Healthcare= () => {
   };
 
   const handleSubmit = async (pollId) => {
-    const publicId = localStorage.getItem('publicId');
-    const category = 'Education';
+    if (!publicId) {
+      alert('Please sign in to submit a response.');
+      return;
+    }
+
+    if (submittedPolls.has(pollId)) return; // Prevent duplicate submissions
+
+    const category = 'Healthcare';
     const currentDate = new Date().toISOString();
 
     const { responseType, response } = responses[pollId] || {};
@@ -53,8 +70,12 @@ const Healthcare= () => {
     };
 
     try {
-      await axios.post('http://localhost:8080/api/public-polls', data);
-      alert('Your response has been submitted!');
+      await addServices.submitPollResponse(data);
+      // Update local storage and state
+      const updatedSubmittedPolls = new Set(submittedPolls);
+      updatedSubmittedPolls.add(pollId);
+      localStorage.setItem(`submittedPolls_${publicId}`, JSON.stringify([...updatedSubmittedPolls]));
+      setSubmittedPolls(updatedSubmittedPolls);
     } catch (error) {
       console.error('Error submitting poll response:', error);
       alert('There was an error submitting your response. Please try again.');
@@ -76,19 +97,19 @@ const Healthcare= () => {
   const displayedPolls = polls.slice(currentPage * pollsPerPage, (currentPage + 1) * pollsPerPage);
 
   return (
-    <div className="polls-wrapper" >
+    <div className="polls-wrapper">
       <div className="education-poll-container">
         <center>
           <h1>Healthcare Polls</h1>
-          <p>We value your opinion on various healthcare topics. Please take a moment to participate in our poll and share your thoughts.</p>
+          <p>We value your opinion on various educational topics. Please take a moment to participate in our poll and share your thoughts.</p>
         </center>
-        <button style={{color:"white"}}className="back-buttons" onClick={() => navigate('/publicdashboard')}>Home</button>
+        <button className="back-buttons" onClick={() => navigate('/publicdashboard')} style={{ color: "white" }}>Home</button>
       </div>
       {polls.length === 0 ? (
         <>
           <div className="no-polls-message">Currently, no polls are available.</div>
           <center>
-            <img src="https://img.freepik.com/free-vector/hand-drawn-no-data-concept_52683-127829.jpg?ga=GA1.1.459237625.1721796584&semt=ais_hybrid" alt="Avatar" className="avatar" />
+            <img src="https://img.freepik.com/free-vector/hand-drawn-no-data-concept_52683-127829.jpg?ga=GA1.1.459237625.1721796584&semt=ais_hybrid" alt="No Data" className="avatar" />
           </center>
         </>
       ) : (
@@ -101,13 +122,21 @@ const Healthcare= () => {
                 color: pollDetails.fontColor || '#000',
                 backgroundColor: pollDetails.backgroundColor || '#fff',
               };
+              const isSubmitted = submittedPolls.has(pollDetails.pollId);
               return (
                 <div key={pollDetails.pollId} className="poll-card" style={style}>
                   <div className="poll-title" style={{ fontSize: `${pollDetails.fontSize}px` }}>
                     <strong>{pollDetails.question}</strong>
                   </div>
                   <PollOptions pollDetails={pollDetails} onResponseChange={handleResponseChange} />
-                  <button className="submit" style={{ width: "100px",marginTop:"10px",backgroundColor:"rgb(12, 57, 82)"}} onClick={() => handleSubmit(pollDetails.pollId)}>Submit</button>
+                  <button
+                    className="submit"
+                    style={{ width: "150px", marginTop: "10px", backgroundColor: isSubmitted ? "#B0B0B0" : "rgb(12, 57, 82)" }}
+                    onClick={() => handleSubmit(pollDetails.pollId)}
+                    disabled={isSubmitted}
+                  >
+                    {isSubmitted ? 'Submitted' : 'Submit'}
+                  </button>
                 </div>
               );
             })}
@@ -122,4 +151,4 @@ const Healthcare= () => {
   );
 };
 
-export default Healthcare;
+export default Education;

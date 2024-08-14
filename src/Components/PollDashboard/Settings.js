@@ -1,49 +1,63 @@
-import React, { useState } from 'react';
-import { styled } from '@mui/material/styles';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-
-const SettingsContainer = styled(Container)(({ theme }) => ({
-  marginTop: theme.spacing(4),
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-}));
+import React, { useEffect, useState } from 'react';
+import './Setting.css'; // Import the CSS file
 
 const Settings = () => {
-  const [nickname, setNickname] = useState('');
+  const [topPolls, setTopPolls] = useState([]);
 
-  const handleNicknameChange = (event) => {
-    setNickname(event.target.value);
-  };
+  useEffect(() => {
+    const fetchPollData = async () => {
+      try {
+        // Fetch data from the public-polls API
+        const response = await fetch('http://localhost:8080/api/public-polls');
+        const data = await response.json();
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Handle the nickname change logic here
-    console.log('New nickname:', nickname);
-  };
+        // Process the data to count occurrences of each publicId
+        const publicIdCounts = data.reduce((acc, poll) => {
+          acc[poll.publicId] = (acc[poll.publicId] || 0) + 1;
+          return acc;
+        }, {});
+
+        // Sort the publicIds by count in descending order and take the top 5
+        const sortedPublicIds = Object.entries(publicIdCounts)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 5);
+
+        // Fetch nicknames for the top 5 publicIds
+        const topPollsWithNicknames = await Promise.all(
+          sortedPublicIds.map(async ([publicId, count], index) => {
+            const nameResponse = await fetch('http://localhost:8080/api/public/${publicId}');
+            const { nickname } = await nameResponse.json();
+            console.log(nickname);
+            return { publicId, nickname, count, rank: index + 1 };
+          })
+        );
+
+        setTopPolls(topPollsWithNicknames);
+      } catch (error) {
+        console.error('Error fetching poll data:', error);
+      }
+    };
+
+    fetchPollData();
+  }, []);
+
 
   return (
-    <SettingsContainer>
-      <Typography variant="h4" gutterBottom>
-        Settings
-      </Typography>
-      <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: '600px' }}>
-        <TextField
-          variant="outlined"
-          fullWidth
-          label="Change Nickname"
-          value={nickname}
-          onChange={handleNicknameChange}
-          style={{ marginBottom: '16px' }}
-        />
-        <Button variant="contained" color="primary" type="submit">
-          Save Changes
-        </Button>
-      </form>
-    </SettingsContainer>
+    <>
+    <h1 className="leaderboard-title">Top 5 Public Polls</h1>
+    <div className="leaderboard-container">
+      
+      <ul className="leaderboard-list">
+        {topPolls.map(({ publicId, nickname, count, rank }) => (
+          <li key={publicId} className={`leaderboard-item rank-${rank}`
+          }>
+            <span className="leaderboard-rank">{rank}</span>
+            <strong style={{marginLeft:"15%"}}>{nickname}</strong> {count} votes
+          </li>
+        ))}
+      </ul>
+    </div>
+    </>
   );
 };
 

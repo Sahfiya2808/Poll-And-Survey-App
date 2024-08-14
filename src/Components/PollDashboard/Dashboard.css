@@ -8,7 +8,7 @@ html, body {
 
 .root {
   display: flex;
-  height: 100%; /* Ensure the root takes full height */
+  height: 100%; /* Ensure the root takes full height *//*
 }
 
 .appBarStyled {
@@ -27,18 +27,15 @@ html, body {
   box-sizing: border-box;
 }
 
-.content {
-  flex-grow: 1;
-  padding: 24px;
-  margin-left: 240px; /* Adjust if the drawer width is different */
-  overflow-y: auto; /* Allows scrolling if content overflows */
-  height: calc(100vh - 64px); /* Adjust based on the height of the app bar */
-}
+
 
 .sectionTitle {
   margin-top: 20px;
   text-align: center;
+  color: #3e2723; /* Dark brown color for section titles */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Adds a shadow effect */
 }
+
 
 .boxStyled {
   width: 100%;
@@ -138,5 +135,61 @@ html, body {
   border-radius: 8px;
 }
 .css-hyum1k-MuiToolbar-root{
-  background-color: #2206c3;
+  background-color: whitesmoke;
+}
+
+.horizontalScrollContainer {
+  padding: 10px;
+  gap: 16px;
+  white-space: nowrap;
+  display: flex;
+  overflow-x: auto;
+}
+
+.horizontalScrollContainer::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
+}
+ 
+.poll-item {
+  width: 500px; /* Increased width */
+  padding: 20px; /* Increased padding */
+  border: 1px solid #a1887f; /* Border color for visual separation */
+  border-radius: 12px; /* Rounded corners */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center content horizontally */
+  justify-content: center; /* Center content vertically */
+  background-color: #efebe9; /* Light brown background for cards */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for a 3D effect */
+  transition: transform 0.3s, box-shadow 0.3s; /* Smooth transition for effects */
+  margin-bottom: 20px;
+}
+.poll-item:hover {
+  transform: translateY(-10px); /* Lift up on hover */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+}
+
+.poll-item:hover {
+  background-color: #e0e0e0;
+}
+
+.poll-link {
+  text-decoration: none;
+  color: inherit;
+}
+.poll-titles {
+  font-weight: bold;
+  margin-bottom: 10px; /* Add spacing below the title */
+  overflow-wrap: break-word; /* Break long words */
+  word-wrap: break-word; /* Support older browsers */
+  text-align: center; /* Center-align the text */
+}
+
+.toolbarRight{
+  color: black;
+  font-size: larger;
+}
+
+.trending{
+  padding-right: 90px;
 }

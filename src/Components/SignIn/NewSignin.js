@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './NewSignin.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import addServices from '../../Service/AddServices';
 
 const NewSignin = () => {
   const [username, setUsername] = useState('');
@@ -15,8 +16,8 @@ const NewSignin = () => {
     e.preventDefault(); // Prevent default form submission
 
     try {
-      const response = await axios.get('http://localhost:8080/api/users/fetch');
-      const user = response.data.find((user) => user.username === username);
+      const response = await addServices.fetchUsers();
+      const user = response.find((user) => user.username === username);
       if (user) {
         if (user.password === password) {
           localStorage.setItem('loggedInUserId', user.userId);
@@ -48,19 +49,19 @@ const NewSignin = () => {
           <form onSubmit={handleSubmit}>
             <div className="email-login">
               <div className="input-group">
-                <h3 className="input-label">Enter username</h3>
+                <h3 className="input-label">Username</h3>
                 <input
                   type="text"
-                  placeholder="Username"
+                  
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                 />
               </div>
               <div className="input-group">
-                <h3 className="input-label">Enter password</h3>
+                <h3 className="input-label">Password</h3>
                 <input
                   type="password"
-                  placeholder="Password"
+                  
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />

@@ -55,7 +55,7 @@ const MainSection = () => {
             <p>Our live Polls allow you to hear the voice of thousands without bias, vote manipulation or going down in times of high traffic. Ask your question and see answers in vibrant, live and reliable graphs. No coding, no messing about just results in real time.</p>
           </div>
         </div>
-      </section>
+      </section>  
 
       <section className="info-section reversed">
         <div className="image-text-container">

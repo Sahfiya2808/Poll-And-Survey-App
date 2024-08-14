@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './Main.css';
 import UserDetails from './UserDetails';
 import CreatePoll from './CreatePoll';
+import { useNavigate } from 'react-router-dom';
 
 function Main() {
   const [pollDetails, setPollDetails] = useState({
@@ -29,9 +30,13 @@ function Main() {
   };
 
   const loggedInUserId = localStorage.getItem('loggedInUserId');
-
+   
+  const navigate= useNavigate();
+  
   return (
+    
     <div className="app-container">
+    
       <div className="left-panel">
         <UserDetails pollDetails={pollDetails} onPollDetailsChange={handlePollDetailsChange} />
       </div>

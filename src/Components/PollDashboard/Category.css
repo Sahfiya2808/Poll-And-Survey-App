@@ -8,16 +8,16 @@
   }
   
   .polls-container {
-    display: flex;
-    justify-content: center; /* Center the polls horizontally */
-    flex-wrap: wrap; /* Allow wrapping to the next line */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns */
+    gap: 20px; /* Space between polls */
     width: 100%;
     max-width: 1200px;
+    margin: 0 auto; /* Center the container */
+    padding-top: 100px;
   }
   
   .poll-card {
-    width: 500px;
-    margin-top: 80px; /* Reduce space between polls */
     padding: 15px;
     border: 1px solid #ddd; /* Border color for visual separation */
     border-radius: 8px; /* Optional: rounded corners */
@@ -25,11 +25,9 @@
     flex-direction: column;
     align-items: center; /* Center content horizontally */
     justify-content: center; /* Center content vertically */
-  
-    margin-left:40px;
-    margin-right: 10px;
-    margin-bottom: 30px;
+    
   }
+  
   
   .poll-title {
     margin-bottom: 10px;

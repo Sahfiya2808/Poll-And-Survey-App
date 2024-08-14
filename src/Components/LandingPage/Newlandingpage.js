@@ -3,6 +3,7 @@ import './Newlandingpage.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Modal from 'react-modal';
+import AddServices from '../../Service/AddServices';
 
 Modal.setAppElement('#root'); // Bind modal to your appElement (http://reactcommunity.org/react-modal/accessibility/)
 
@@ -23,20 +24,16 @@ const LandingPage = () => {
     }
 
     try {
-      const response = await axios.get("http://localhost:8080/api/public");
+      const response = await AddServices.fetchPublicUsers();
 
-      const users = response.data;
-      const user = users.find(user => user.nickname === nickname);
+      const user = response.find(user => user.nickname === nickname);
 
       if (user) {
         localStorage.setItem('publicId', user.publicId);
         navigate('/publicdashboard');
       } else {
-        const addUserResponse = await axios.post('http://localhost:8080/api/public', {
-          nickname,
-          age: parseInt(age, 10),
-        });
-        localStorage.setItem('publicId', addUserResponse.data.publicId);
+        const addUserResponse = await AddServices.addUser(nickname,age);
+        localStorage.setItem('publicId', addUserResponse.publicId);
         navigate('/publicdashboard');
       }
       closeModal(); // Close modal after successful submission
@@ -46,7 +43,7 @@ const LandingPage = () => {
   };
 
   const handleNavigation = (path) => () => {
-    navigate(path);
+    setTimeout(() => navigate(path), 1000); // 1-second delay
   };
 
   return (
@@ -83,10 +80,10 @@ const LandingPage = () => {
       </div>
       <Modal
         isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        contentLabel="Enter Nickname and Age"
-        className="modal"
-        overlayClassName="overlay"
+  onRequestClose={closeModal}
+  contentLabel="Enter Nickname and Age"
+  className={`modal ${modalIsOpen ? 'open' : ''}`}
+  overlayClassName={`overlay ${modalIsOpen ? 'open' : ''}`}
       >
         <h2>Enter Nickname and Age</h2>
         <input

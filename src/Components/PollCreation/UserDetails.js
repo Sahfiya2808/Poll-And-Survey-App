@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './UserDetails.css';
+import { useNavigate } from 'react-router-dom';
 
 const fontFamilies = [
   'Arial', 'Verdana', 'Helvetica', 'Times New Roman', 'Courier New', 'Georgia', 'Palatino', 'Garamond', 'Comic Sans MS', 'Arial Black', 'Tahoma', 'Impact'
@@ -58,9 +59,14 @@ function UserDetails({ pollDetails, onPollDetailsChange }) {
   const handleSaveChanges = () => {
     onPollDetailsChange(localPollDetails);
   };
+   
+  const navigate= useNavigate();
+  const handlebackhome = () =>{
+    navigate('/userDashboard')
+  }
 
   return (
-    <div>
+    <div className="wholeback">
       <h2 className='poll-details-heading'>Poll Details</h2>
       <div className="user-details">
         <div className="form-group">
@@ -121,7 +127,8 @@ function UserDetails({ pollDetails, onPollDetailsChange }) {
           </div>
         )}
         
-        <center><button className="buttonm" onClick={handleSaveChanges}>Save Changes</button></center>
+        <center><button className="buttonm" onClick={handleSaveChanges}>Save</button></center>
+        <center><button className="goback" onClick={handlebackhome}>Back</button></center>
       </div>
     </div>
   );

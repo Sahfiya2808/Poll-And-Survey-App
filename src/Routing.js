@@ -14,7 +14,7 @@ import SocialMedia from './Components/PollDashboard/SocialMedia';
  import Entertainment from './Components/PollDashboard/Entertainment';
  import Government from './Components/PollDashboard/Government';
 import Dashboard from './Components/PollDashboard/Dashboard';
-import Settings from './Components/PollDashboard/Settings';
+import Settings from './Components/PollDashboard/Lead';
 
 import Howitworks from './Components/UserHeader/Howitworks';
 import Explore from './Components/UserHeader/Explore';
@@ -39,7 +39,7 @@ const Routing = () => {
               <Route path="/sports" element={<Sports />} />
               <Route path="/entertainment" element={<Entertainment />} />
               <Route path="/government" element={<Government />} />
-              <Route path="/Settings" element={<Settings/>}/>
+              <Route path="/Lead" element={<Settings/>}/>
 
               <Route path="Howitworks" element={<Howitworks/>}/>
               <Route path="Explore" element={<Explore/>}/>

@@ -21,14 +21,14 @@
   }
   
   .signin-right-side {
-    background-color: #d3d3d3; /* Background color for the right side grid */
+    background-color: whitesmoke; /* Background color for the right side grid */
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
   .signin-left-side{
-    background-color:#d3d3d3 ;
+    background-color:whitesmoke ;
   }
   
   .sign-in-box {
@@ -68,7 +68,7 @@
   
   .email-login .sign-in-btn {
     padding: 10px;
-    background-color: #002F6C;
+    background-color: orange;
     color: white;
     border: none;
     border-radius: 5px;
@@ -78,7 +78,7 @@
   }
   
   .email-login .sign-in-btn:hover {
-    background-color: #0056b3;
+    background-color: #6eabe4;
   }
   
   .signup-link {

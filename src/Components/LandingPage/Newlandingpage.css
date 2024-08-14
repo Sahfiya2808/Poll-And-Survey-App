@@ -9,7 +9,7 @@
   height: 100vh;
   justify-content: center;
   align-items: center;
-  background: #d3d3d3; /* Cool Gray for a professional background */
+  background: whitesmoke ; /* Cool Gray for a professional background */
   overflow: hidden; /* Prevent scrolling */
 }
 
@@ -93,7 +93,7 @@
   font-size: 0.9em; /* Slightly smaller font size */
   padding: 8px 16px; /* Adjusted padding */
   border: none; /* Removed border */
-  background: #002F6C; /* Updated theme color */
+  background: orange; /* Updated theme color */
   color: white;
   cursor: pointer;
   border-radius: 4px; /* Slightly smaller border radius */
@@ -101,7 +101,7 @@
 }
 
 .get-landbutton:hover, .sign-landbutton:hover {
-  background: #6A5ACD; /* Darker shade on hover */
+  background: #6eabe4; /* Darker shade on hover */
 }
 
 .landbox .button-container {
@@ -121,17 +121,25 @@
 }
 
 /* Modal Styles */
+/* Modal Styles */
 .modal {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -60%); /* Initial position */
   background: white;
-  padding: 15px; /* Adjusted padding */
-  border-radius: 8px; /* Slightly smaller border radius */
-  width: 280px; /* Reduced width */
+  padding: 15px;
+  border-radius: 8px;
+  width: 280px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
   z-index: 1000;
+  opacity: 0; /* Start hidden */
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out; /* Smooth transition for opacity and transform */
+}
+
+.modal.open {
+  opacity: 1; /* Make visible */
+  transform: translate(-50%, -50%); /* Final position */
 }
 
 .overlay {
@@ -142,13 +150,20 @@
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
   z-index: 999;
+  opacity: 0; /* Start hidden */
+  transition: opacity 0.5s ease-in-out; /* Smooth transition for opacity */
 }
+
+.overlay.open {
+  opacity: 1; /* Make visible */
+}
+
 
 .modal-button {
   font-size: 0.9em; /* Slightly smaller font size */
   padding: 8px 16px; /* Adjusted padding */
   border: none; /* Removed border */
-  background: #002F6C; /* Updated theme color */
+  background: orange; /* Updated theme color */
   color: white;
   cursor: pointer;
   border-radius: 4px; /* Slightly smaller border radius */
@@ -157,7 +172,7 @@
 }
 
 .modal-button:hover {
-  background: #6A5ACD; /* Darker shade on hover */
+  background: #6eabe4; /* Darker shade on hover */
 }
 
 .landnickname-input {

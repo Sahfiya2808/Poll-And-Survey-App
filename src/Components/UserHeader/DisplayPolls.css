@@ -1,13 +1,11 @@
-/* DisplayPolls.css */
-.dp-display-polls {
+.display-polls-container {
   padding: 20px;
   overflow-y: auto; /* Enables vertical scrolling */
+  max-height: calc(100vh - 10px); /* Adjust height to fit within viewport minus header/footer */
   position: relative; /* Position relative for avatar placement */
-  background-color: #d3d3d3;
-  height: 100vh;
 }
 
-.dp-avatar-container {
+.avatar-container {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -17,117 +15,112 @@
   z-index: 10; /* Ensures avatar is on top */
 }
 
-.dp-avatar {
+.avatar {
   width: 100px; /* Adjust size as needed */
   height: auto;
   border-radius: 50%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
 }
 
-.dp-poll-category {
+.polls-by-category {
   margin-bottom: 30px;
 }
 
-.dp-poll-category h2 {
-  font-size: 28px;
+.category-title-container {
+  display: flex;
+  align-items: center; /* Align items vertically centered */
+  justify-content: center; /* Center items horizontally */
+  gap: 20px; /* Space between title and button */
+  width: 100%;
+  max-width: 400px; /* Limit width for better alignment */
   margin-bottom: 20px;
+  margin-left: 35%;
+}
+
+.category-title {
+  font-size: 28px;
   text-align: center;
-  color: whitesmoke;
+  color: #333;
   font-family: 'Arial', sans-serif;
   font-weight: 700;
   text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
   padding: 10px;
-  background: #002F6C;
+  background: whitesmoke; /* Background color for category */
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, background-color 0.3s ease;
-  width: 400px;
-  margin-left: 35%;
+  flex: 1; /* Allow title to take available space */
 }
 
-.dp-poll-category h2:hover {
+.category-title:hover {
   transform: translateY(-5px);
-  background-color: #002F6C;
+  background-color: #e0e0e0; /* Slightly darker shade on hover */
 }
 
-.dp-polls-list {
+.polls-card-list {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
+  justify-content: center; /* Center the cards horizontally */
 }
 
-.dp-poll-card {
-  background: #ffffff;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 12px;
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.dp-poll-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-.dp-question {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.dp-answer {
-  font-size: 16px;
-  margin-bottom: 10px;
-  padding: 10px;
-  background-color: #f4f4f4;
-  border-radius: 8px;
-}
-
-.dp-button-container {
+.poll-card {
+  background: #f9f9f9;
+  padding: 20px; /* Increased padding for better spacing */
+  border: 1px solid #ddd;
+  border-radius: 12px; /* Rounded corners for the card */
+  width: 300px; /* Fixed width for consistency */
+  min-height: 200px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect for depth */
+  transition: transform 0.2s ease-in-out;
   display: flex;
-  justify-content: flex-end;
-  gap: 10px;
+  flex-direction: column;
+  align-items: center; /* Center content horizontally */
+  justify-content: center; /* Center content vertically */
+  text-align: center; /* Center text inside the card */
 }
 
-.dp-button {
-  padding: 10px 15px;
+.poll-card:hover {
+  transform: scale(1.03); /* Slightly increase card size on hover */
+}
+
+.poll-card-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: auto;
+}
+
+.poll-change-button,
+.poll-delete-button {
+  padding: 8px 16px;
   border: none;
-  border-radius: 8px;
+  border-radius: 8px; /* Rounded corners */
   cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.dp-button:hover {
-  transform: translateY(-3px);
-}
-
-.dp-change-button {
-  background-color: #FF5733; /* Bright orange for contrast */
+  font-size: 14px;
+  transition: background-color 0.3s, transform 0.3s;
   color: white;
 }
 
-.dp-change-button:hover {
-  background-color: #E74C3C; /* Slightly darker on hover */
+.poll-change-button {
+  background-color: #f57c00; /* Orange color */
 }
 
-.dp-delete-button {
-  background-color: #C70039; /* Deep red for contrast */
-  color: white;
+.poll-change-button:hover {
+  background-color: #fb8c00; /* Darker orange on hover */
+  transform: translateY(-2px); /* Lift effect */
 }
 
-.dp-delete-button:hover {
-  background-color: #900C3F; /* Slightly darker on hover */
+.poll-delete-button {
+  background-color: #f57c00; /* Orange color */
 }
 
-.dp-show-more {
-  padding: 8px 16px; /* Adjusted padding */
-  border: none;
-  background-color: #002F6C;
+.poll-delete-button:hover {
+  background-color: #fb8c00; /* Darker orange on hover */
+  transform: translateY(-2px); /* Lift effect */
+}
+
+.load-more-button {
+  background-color: #f57c00; /* Orange color */
   color: white;
   border-radius: 50%; /* Make the button round */
   cursor: pointer;
@@ -137,27 +130,44 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 100px;
-  margin-left: 30px;
+  margin: 20px auto; /* Center the button horizontally */
+  transition: background-color 0.3s ease;
 }
 
-.dp-show-more:hover {
-  background-color: #83b1ee;
+.load-more-button:hover {
+  background-color: #fb8c00; /* Darker orange on hover */
 }
 
-.dp-polling-card {
-  background-color: #ffffff; /* White background for contrast */
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px; /* Space between cards */
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  width: 210px;
-  height: 210px;
+.display-navigation-arrows {
+  display: flex;
+  justify-content: center; /* Center the navigation arrows horizontally */
+  margin-top: 20px;
 }
 
-.dp-polling-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+.arrow {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.arrow:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.no-polls-message {
+  font-family: 'Arial', sans-serif;
+  font-size: 32px; /* Increased font size */
+  color: black; /* Light brown color for no polls message */
+  text-align: center;
+  margin-top: 50px;
+}
+
+.avatar {
+  width: 420px; /* Increased size */
+  height: 420px; /* Increased size */
+  border-radius: 50%;
+  margin-top: 30px;
+  background-color: #a1887f; /* Medium brown background for avatar */
 }

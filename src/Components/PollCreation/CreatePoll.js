@@ -3,6 +3,7 @@ import './CreatePoll.css';
 import Modal from './Catagory';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import AddServices from '../../Service/AddServices';
 
 function CreatePoll({ pollDetails, userId }) {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -245,7 +246,7 @@ function CreatePoll({ pollDetails, userId }) {
     console.log('Submitting poll data:', pollData);
 
     try {
-      const response = await axios.post('http://localhost:8080/api/polls', pollData);
+      const response = await AddServices.createPoll(pollData);
       console.log('Poll created:', response.data);
       setModalOpen(false);
       navigate('/userDashboard');
@@ -266,9 +267,11 @@ function CreatePoll({ pollDetails, userId }) {
     setSelectedOption(option);
     setModalOpen(false);
   };
+  
 
   return (
     <>
+    
       <center style={{marginTop:"35px"}}><h1>Poll Preview</h1></center>
       <div className="create-poll" style={style}>
         <div className="poll-question">
@@ -277,7 +280,7 @@ function CreatePoll({ pollDetails, userId }) {
         {renderOptions()}
       </div>
       <center>
-      <button className='btnscreate' onClick={() => setModalOpen(true)}>Select Category</button>
+      <button className='btnscreate' onClick={() => setModalOpen(true)}>Category</button>
         <button className='btnscreate' onClick={handleSubmit}>Submit</button>
       </center>
       <Modal

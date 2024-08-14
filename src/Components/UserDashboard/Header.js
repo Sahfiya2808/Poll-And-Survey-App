@@ -2,6 +2,7 @@ import React from 'react';
 import './Header.css';
 import { useNavigate } from 'react-router-dom';
 
+
 const Header = () => {
   const navigate = useNavigate();
   
@@ -11,7 +12,7 @@ const Header = () => {
 
   return (
     <header className="header">
-      <div className="logo">SurveySphere</div>
+      <div className="logo" >Pollify</div>
       <nav className="nav">
         <span className="nav-link" onClick={handleClick('/Howitworks')}>How it works</span>
         <span className="nav-link" onClick={handleClick('/Explore')}>Explore</span>
